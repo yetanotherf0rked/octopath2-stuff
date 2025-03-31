@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Resource List</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      cursor: pointer;
+      background-color: #f4f4f4;
+    }
+    button {
+      margin-right: 5px;
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Resource List</h1>
+  <p>
+    Sort by:
+    <button id="sortName">Name</button>
+    <button id="sortDate">Creation Date</button>
+    <button id="sortAuthor">Author</button>
+  </p>
+  <table id="resourceTable">
+    <thead>
+      <tr>
+        <th data-sort="title">Title</th>
+        <th data-sort="author">Author</th>
+        <th data-sort="creationDate">Creation Date</th>
+        <th data-sort="updateDate">Update Date</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows will be injected by script.js -->
+    </tbody>
+  </table>
+  
+  <script src="script.js"></script>
+</body>
+</html>
