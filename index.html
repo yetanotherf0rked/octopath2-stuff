@@ -53,42 +53,55 @@ title: Home
     <div class="tab" data-tab="about-tab">About</div>
   </nav>
 
-  <!-- Routes Tab Content -->
-  <div id="routes-tab" class="tab-content active">
-    <h2>Routes</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Fastest</th>
-          <th>Creation Date</th>
-          <th>Update Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for route in site.data.routes-with-timestamps %}
-        <tr>
-          <td>{% if route.fastest %}⚡{% endif %}</td>
-          <td>{{ route.creation_date }}</td>
-          <td>{{ route.update_date }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Resources Tab Content -->
-  <div id="resources-tab" class="tab-content">
-    <h2>Resources</h2>
-    {% for category in site.data.resources | keys %}
-      <h3>{{ category }}</h3>
-      {% assign items = site.data.resources[category] %}
-      <ul>
-        {% for item in items %}
-          <li><a href="{{ item.link }}" target="_blank">{{ item.Title }}</a></li>
-        {% endfor %}
-      </ul>
+<!-- Routes Tab Content -->
+<div id="routes-tab" class="tab-content">
+  <h2>Routes</h2>
+  {% for game in site.data.routes-with-timestamps | keys %}
+    <h3>{{ game }}</h3>
+    {% assign game_data = site.data.routes-with-timestamps[game] %}
+    {% for category in game_data | keys %}
+      <h4>{{ category }}</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Fastest</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Creation Date</th>
+            <th>Update Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% assign routes = game_data[category] %}
+          {% for route in routes %}
+            <tr>
+              <td>{% if route.fastest %}⚡{% endif %}</td>
+              <td><a href="{{ route.link }}">{{ route.Title }}</a></td>
+              <td>{{ route.author }}</td>
+              <td>{{ route.created }}</td>
+              <td>{{ route.updated }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     {% endfor %}
-  </div>
+  {% endfor %}
+</div>
+
+
+    <!-- Resources Tab Content -->
+    <div id="resources-tab" class="tab-content">
+      <h2>Resources</h2>
+      {% for category in site.data.resources | keys %}
+        <h3>{{ category }}</h3>
+        {% assign items = site.data.resources[category] %}
+        <ul>
+          {% for item in items %}
+            <li><a href="{{ item.link }}" target="_blank">{{ item.Title }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endfor %}
+    </div>
 
   <!-- About Tab Content -->
   <div id="about-tab" class="tab-content">
