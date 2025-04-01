@@ -1,7 +1,3 @@
-title: "Octopath Traveler II Routes"
+title: "Octopath Traveler II Routes & Resources"
 data_dir: .
-include:
-  - resources.json
-  - routes-with-timestamps.json
-  - ABOUT.md
 
