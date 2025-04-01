@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Octopath Traveler II Speedrunning Routes & Resources</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #ccc;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      margin-right: 5px;
+      background: #f9f9f9;
+    }
+    .tab.active {
+      background: #fff;
+      font-weight: bold;
+      border-top: 2px solid #000;
+    }
+    .content {
+      padding: 20px;
+      border: 1px solid #ccc;
+      background: #fff;
+    }
+    ul {
+      list-style: none;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 5px;
+    }
+    a {
+      text-decoration: none;
+      color: #0366d6;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Octopath Traveler II Speedrunning Routes & Resources</h1>
+  <div class="tabs">
+    <div class="tab active" data-target="routes">Routes</div>
+    <div class="tab" data-target="resources">Resources</div>
+  </div>
+  <div class="content" id="content">
+    <!-- Dynamic content will be loaded here -->
+  </div>
+
+  <script>
+    /**
+     * Recursively renders a JSON structure into nested lists.
+     * If an object has properties "Title", "link", and optionally "fastest",
+     * it creates a clickable link and prepends a bolt emoji if fastest is true.
+     */
+    function renderList(data) {
+      // Create a container UL element.
+      const ul = document.createElement('ul');
+      if (Array.isArray(data)) {
+        data.forEach(item => {
+          const li = document.createElement('li');
+          li.appendChild(renderList(item));
+          ul.appendChild(li);
+        });
+      } else if (typeof data === 'object' && data !== null) {
+        // If the object is a "route" entry, it should have Title and link.
+        if (data.Title && data.link) {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = data.link;
+          a.target = "_blank";
+          // If fastest is true, add a bolt emoji.
+          const titleText = (data.fastest ? "⚡" : "") + data.Title + " by " + data.author;
+          a.textContent = titleText;
+          li.appendChild(a);
+          ul.appendChild(li);
+        } else {
+          // Otherwise, iterate over object keys to create nested lists.
+          for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+              const li = document.createElement('li');
+              const header = document.createElement('strong');
+              header.textContent = key;
+              li.appendChild(header);
+              li.appendChild(renderList(data[key]));
+              ul.appendChild(li);
+            }
+          }
+        }
+      } else {
+        // For other types (e.g. string, number), simply output the value.
+        ul.appendChild(document.createTextNode(data));
+      }
+      return ul;
+    }
+
+    // Function to load a JSON file and render it into the content div.
+    function loadAndRenderJSON(filename) {
+      fetch(filename)
+        .then(response => response.json())
+        .then(data => {
+          const contentDiv = document.getElementById('content');
+          contentDiv.innerHTML = ""; // Clear previous content.
+          contentDiv.appendChild(renderList(data));
+        })
+        .catch(err => {
+          document.getElementById('content').textContent = "Error loading " + filename + ": " + err;
+        });
+    }
+
+    // Set up tab switching.
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove 'active' class from all tabs.
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const target = tab.getAttribute('data-target');
+        if (target === 'routes') {
+          loadAndRenderJSON('routes-with-timestamps.json');
+        } else if (target === 'resources') {
+          loadAndRenderJSON('resources.json');
+        }
+      });
+    });
+
+    // Initially load routes.
+    loadAndRenderJSON('routes-with-timestamps.json');
+  </script>
+</body>
+</html>
+
