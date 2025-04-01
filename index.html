@@ -62,8 +62,8 @@ title: Home
                 <td>{% if route.fastest %}⚡{% endif %}</td>
                 <td><a href="{{ route.link }}" target="_blank">{{ route.Title }}</a></td>
                 <td>{{ route.author }}</td>
-                <td>{{ route.created }}</td>
-                <td>{{ route.updated }}</td>
+                <td>{{ route.created | default: "N/A" }}</td> <!-- added default fallback -->
+                <td>{{ route.updated | default: "N/A" }}</td> <!-- added default fallback -->
               </tr>
             {% endfor %}
           </tbody>
@@ -102,7 +102,10 @@ title: Home
         tabs.forEach(t => t.classList.remove('active'));
         tabContents.forEach(c => c.classList.remove('active'));
         tab.classList.add('active');
-        document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+        const targetEl = document.getElementById(tab.getAttribute('data-tab')); // added null check
+        if (targetEl) {
+          targetEl.classList.add('active');
+        }
       });
     });
   </script>
