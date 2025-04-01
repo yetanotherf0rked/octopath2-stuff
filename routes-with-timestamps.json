@@ -2,6 +2,7 @@
   "Octopath Traveler II": {
     "Any%": [
       {
+        "fastest": true,
         "Title": "Thron\u00e9 DPS/Alrond",
         "author": "quadraaceps",
         "link": "https://docs.google.com/spreadsheets/d/1UDOPhKQpn3VNF-Fx6TjriEbsVKq3yJx_Ajb6UaW7-CM/edit?usp=sharing",
@@ -28,6 +29,7 @@
     ],
     "Galdera": [
       {
+        "fastest": true,
         "Title": "Galdera Fastest Glitchless",
         "author": "quadraaceps",
         "link": "https://docs.google.com/spreadsheets/d/1UDOPhKQpn3VNF-Fx6TjriEbsVKq3yJx_Ajb6UaW7-CM/edit?usp=sharing",
@@ -95,6 +97,7 @@
           "certainty": "high"
         },
         {
+          "fastest": true,
           "Title": "Ochette SS",
           "author": "Z3R01337",
           "link": "https://elegant-lichterman-a0f931.netlify.app/Octopath-Traveler-II/Single-Story/Ochette/",
@@ -129,6 +132,7 @@
           "certainty": "high"
         },
         {
+          "fastest": true,
           "Title": "Castti SS",
           "author": "Z3R01337",
           "link": "https://elegant-lichterman-a0f931.netlify.app/Octopath-Traveler-II/Single-Story/Castti/",
@@ -163,6 +167,7 @@
           "certainty": "high"
         },
         {
+          "fastest": true,
           "Title": "Thron\u00e9 SS",
           "author": "Z3R01337",
           "link": "https://elegant-lichterman-a0f931.netlify.app/Octopath-Traveler-II/Single-Story/Throne/",
@@ -189,6 +194,7 @@
       ],
       "Osvald": [
         {
+          "fastest": true,
           "Title": "Osvald SS",
           "author": "Z3R01337",
           "link": "https://elegant-lichterman-a0f931.netlify.app/Octopath-Traveler-II/Single-Story/Osvald/",
@@ -223,6 +229,7 @@
           "certainty": "high"
         },
         {
+          "fastest": true,
           "Title": "Partitio SS Inventorless",
           "author": "Z3R01337",
           "link": "https://elegant-lichterman-a0f931.netlify.app/Octopath-Traveler-II/Single-Story/Partitio/",
@@ -265,6 +272,7 @@
           "certainty": "high"
         },
         {
+          "fastest": true,
           "Title": "Agnea SS",
           "author": "Z3R01337",
           "link": "https://elegant-lichterman-a0f931.netlify.app/Octopath-Traveler-II/Single-Story/Agnea/",
@@ -299,6 +307,7 @@
           "certainty": "high"
         },
         {
+          "fastest": true,
           "Title": "Temenos SS",
           "author": "Z3R01337",
           "link": "https://elegant-lichterman-a0f931.netlify.app/Octopath-Traveler-II/Single-Story/Temenos/#cait--puff-differences",
@@ -317,6 +326,7 @@
           "certainty": "high"
         },
         {
+          "fastest": true,
           "Title": "Hikari SS",
           "author": "Z3R01337",
           "link": "https://elegant-lichterman-a0f931.netlify.app/Octopath-Traveler-II/Single-Story/Hikari/",
