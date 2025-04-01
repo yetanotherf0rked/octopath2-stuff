@@ -15,16 +15,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          node-version: '16'
+          python-version: '3.x'
 
       - name: Install dependencies
-        run: npm install axios pdf-parse
+        run: |
+          pip install xeuledoc requests beautifulsoup4 python-dateutil
 
       - name: Run timestamp updater script
-        run: node update-timestamps.js
+        run: python update_timestamps.py
 
       - name: Commit updated JSON file
         uses: EndBug/add-and-commit@v9
