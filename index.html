@@ -79,8 +79,9 @@ title: Home
   <!-- Resources Tab Content -->
   <div id="resources-tab" class="tab-content">
     <h2>Resources</h2>
-    {% for category, items in site.data.resources %}
+    {% for category in site.data.resources | keys %}
       <h3>{{ category }}</h3>
+      {% assign items = site.data.resources[category] %}
       <ul>
         {% for item in items %}
           <li><a href="{{ item.link }}" target="_blank">{{ item.Title }}</a></li>
