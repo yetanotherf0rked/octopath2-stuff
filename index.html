@@ -9,7 +9,7 @@ title: Home
   <meta charset="UTF-8">
   <title>{{ page.title }} | {{ site.title }}</title>
   <style>
-    /* Basic styling for tabs */
+    /* Basic styling for the tabs */
     nav {
       margin-bottom: 20px;
     }
@@ -48,14 +48,14 @@ title: Home
 <body>
   <!-- Navigation Tabs -->
   <nav>
-    <div class="tab active" data-tab="routes">Routes</div>
-    <div class="tab" data-tab="resources">Resources</div>
-    <div class="tab" data-tab="about">About</div>
+    <div class="tab active" data-tab="routes-tab">Routes</div>
+    <div class="tab" data-tab="resources-tab">Resources</div>
+    <div class="tab" data-tab="about-tab">About</div>
   </nav>
 
   <!-- Routes Tab Content -->
-  <div id="routes" class="tab-content active">
-    <h1>Routes</h1>
+  <div id="routes-tab" class="tab-content active">
+    <h2>Routes</h2>
     <table>
       <thead>
         <tr>
@@ -77,10 +77,10 @@ title: Home
   </div>
 
   <!-- Resources Tab Content -->
-  <div id="resources" class="tab-content">
-    <h1>Resources</h1>
+  <div id="resources-tab" class="tab-content">
+    <h2>Resources</h2>
     {% for category, items in site.data.resources %}
-      <h2>{{ category }}</h2>
+      <h3>{{ category }}</h3>
       <ul>
         {% for item in items %}
           <li><a href="{{ item.link }}" target="_blank">{{ item.Title }}</a></li>
@@ -90,23 +90,23 @@ title: Home
   </div>
 
   <!-- About Tab Content -->
-  <div id="about" class="tab-content">
-    <h1>About</h1>
+  <div id="about-tab" class="tab-content">
+    <h2>About</h2>
     {% include_relative ABOUT.md %}
   </div>
 
   <script>
     // JavaScript for tab switching functionality
     const tabs = document.querySelectorAll('.tab');
-    const contents = document.querySelectorAll('.tab-content');
-
+    const tabContents = document.querySelectorAll('.tab-content');
+    
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
-        // Remove active classes from all tabs and hide all content
+        // Remove active classes from all tabs and hide all contents
         tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-
-        // Activate clicked tab and show its content
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        // Activate clicked tab and its corresponding content
         tab.classList.add('active');
         document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
       });
