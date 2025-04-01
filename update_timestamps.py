@@ -98,5 +98,44 @@ def get_changelog_metadata(url):
                     "updated": dates[-1].isoformat(),
                     "certainty": "low"
                 }
-        return {"created":
+        return {"created": None, "updated": None, "certainty": "low"}
+    except Exception as e:
+        print(f"Error fetching changelog metadata for {url}: {e}", file=sys.stderr)
+        return {"created": None, "updated": None, "certainty": "low"}
+
+def get_metadata(url):
+    if re.search(r'docs\.google\.com|drive\.google\.com|sheets\.google\.com', url, re.I):
+        return get_google_metadata(url)
+    elif re.search(r'pastebin\.com|pastemd\.netlify\.app', url, re.I):
+        return get_paste_metadata(url)
+    else:
+        return get_changelog_metadata(url)
+
+def process_object(obj):
+    if isinstance(obj, list):
+        for item in obj:
+            process_object(item)
+    elif isinstance(obj, dict):
+        if "link" in obj:
+            metadata = get_metadata(obj["link"])
+            obj["created"] = metadata["created"]
+            obj["updated"] = metadata["updated"]
+            obj["certainty"] = metadata["certainty"]
+        for key in obj:
+            process_object(obj[key])
+
+def main():
+    try:
+        with open("routes.json", "r", encoding="utf8") as f:
+            routes_data = json.load(f)
+        process_object(routes_data)
+        with open("routes-with-timestamps.json", "w", encoding="utf8") as f:
+            json.dump(routes_data, f, indent=2)
+        print("Created routes-with-timestamps.json successfully.")
+    except Exception as e:
+        print("Error processing routes:", e, file=sys.stderr)
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
 
