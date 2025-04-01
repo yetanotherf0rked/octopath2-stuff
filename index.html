@@ -9,10 +9,9 @@ title: Home
   <meta charset="UTF-8">
   <title>{{ page.title }} | {{ site.title }}</title>
   <style>
-    /* Basic styling for the tabs */
-    nav {
-      margin-bottom: 20px;
-    }
+    /* Basic styling for tabs and table */
+    body { font-family: sans-serif; }
+    nav { margin-bottom: 20px; }
     .tab {
       display: inline-block;
       padding: 10px 20px;
@@ -21,28 +20,11 @@ title: Home
       cursor: pointer;
       border-radius: 3px;
     }
-    .tab.active {
-      background: #eee;
-      font-weight: bold;
-    }
-    .tab-content {
-      display: none;
-      padding-top: 20px;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-    }
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-    th, td {
-      padding: 8px;
-      text-align: left;
-    }
+    .tab.active { background: #eee; font-weight: bold; }
+    .tab-content { display: none; padding-top: 20px; }
+    .tab-content.active { display: block; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
   </style>
 </head>
 <body>
@@ -53,55 +35,57 @@ title: Home
     <div class="tab" data-tab="about-tab">About</div>
   </nav>
 
-<!-- Routes Tab Content -->
-<div id="routes-tab" class="tab-content">
-  <h2>Routes</h2>
-  {% for game in site.data.routes-with-timestamps | keys %}
-    <h3>{{ game }}</h3>
-    {% assign game_data = site.data.routes-with-timestamps[game] %}
-    {% for category in game_data | keys %}
-      <h4>{{ category }}</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Fastest</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Creation Date</th>
-            <th>Update Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% assign routes = game_data[category] %}
-          {% for route in routes %}
+  <!-- Routes Tab Content -->
+  <div id="routes-tab" class="tab-content active">
+    <h2>Routes</h2>
+    {% assign game_keys = site.data.routes-with-timestamps | keys %}
+    {% for game in game_keys %}
+      <h3>{{ game }}</h3>
+      {% assign game_data = site.data.routes-with-timestamps[game] %}
+      {% assign category_keys = game_data | keys %}
+      {% for category in category_keys %}
+        <h4>{{ category }}</h4>
+        {% assign routes = game_data[category] %}
+        <table>
+          <thead>
             <tr>
-              <td>{% if route.fastest %}⚡{% endif %}</td>
-              <td><a href="{{ route.link }}">{{ route.Title }}</a></td>
-              <td>{{ route.author }}</td>
-              <td>{{ route.created }}</td>
-              <td>{{ route.updated }}</td>
+              <th>Fastest</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Creation Date</th>
+              <th>Update Date</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% endfor %}
-  {% endfor %}
-</div>
-
-
-    <!-- Resources Tab Content -->
-    <div id="resources-tab" class="tab-content">
-      <h2>Resources</h2>
-      {% for category in site.data.resources | keys %}
-        <h3>{{ category }}</h3>
-        {% assign items = site.data.resources[category] %}
-        <ul>
-          {% for item in items %}
-            <li><a href="{{ item.link }}" target="_blank">{{ item.Title }}</a></li>
-          {% endfor %}
-        </ul>
+          </thead>
+          <tbody>
+            {% for route in routes %}
+              <tr>
+                <td>{% if route.fastest %}⚡{% endif %}</td>
+                <td><a href="{{ route.link }}" target="_blank">{{ route.Title }}</a></td>
+                <td>{{ route.author }}</td>
+                <td>{{ route.created }}</td>
+                <td>{{ route.updated }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       {% endfor %}
-    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Resources Tab Content -->
+  <div id="resources-tab" class="tab-content">
+    <h2>Resources</h2>
+    {% assign resource_keys = site.data.resources | keys %}
+    {% for category in resource_keys %}
+      <h3>{{ category }}</h3>
+      {% assign items = site.data.resources[category] %}
+      <ul>
+        {% for item in items %}
+          <li><a href="{{ item.link }}" target="_blank">{{ item.Title }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </div>
 
   <!-- About Tab Content -->
   <div id="about-tab" class="tab-content">
@@ -110,17 +94,13 @@ title: Home
   </div>
 
   <script>
-    // JavaScript for tab switching functionality
+    // Tab switching functionality
     const tabs = document.querySelectorAll('.tab');
     const tabContents = document.querySelectorAll('.tab-content');
-    
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
-        // Remove active classes from all tabs and hide all contents
         tabs.forEach(t => t.classList.remove('active'));
         tabContents.forEach(c => c.classList.remove('active'));
-        
-        // Activate clicked tab and its corresponding content
         tab.classList.add('active');
         document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
       });
