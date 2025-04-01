@@ -2,23 +2,44 @@ import json
 import re
 import requests
 from bs4 import BeautifulSoup
-import datetime
-from dateutil.parser import parse
+import subprocess
 import sys
-
-# Import the xeuledoc package (make sure it's installed via pip)
-import xeuledoc
+from dateutil.parser import parse
 
 def get_google_metadata(url):
+    """
+    Uses the external xeuledoc tool to fetch metadata for Google resources.
+    Expected output format:
+      [+] Creation date : 2023/04/10 15:11:23 (UTC)
+      [+] Last edit date : 2023/10/20 15:01:51 (UTC)
+    """
     try:
-        metadata = xeuledoc.get_metadata(url)
-        return {
-            "created": metadata.get("created"),
-            "updated": metadata.get("updated"),
-            "certainty": "high"
-        }
+        result = subprocess.run(["xeuledoc", url], capture_output=True, text=True, check=True)
+        output = result.stdout
+        # Regex to extract the creation date and last edit date.
+        creation_match = re.search(r'\[\+\]\s*Creation date\s*:\s*([\d/]+\s*[\d:]+\s*\(UTC\))', output)
+        last_edit_match = re.search(r'\[\+\]\s*Last edit date\s*:\s*([\d/]+\s*[\d:]+\s*\(UTC\))', output)
+        if creation_match:
+            creation_date_str = creation_match.group(1).replace("(UTC)", "").strip()
+            try:
+                creation_iso = parse(creation_date_str).isoformat()
+            except Exception:
+                creation_iso = None
+        else:
+            creation_iso = None
+        if last_edit_match:
+            last_edit_date_str = last_edit_match.group(1).replace("(UTC)", "").strip()
+            try:
+                last_edit_iso = parse(last_edit_date_str).isoformat()
+            except Exception:
+                last_edit_iso = None
+        else:
+            last_edit_iso = None
+
+        certainty = "high" if creation_iso and last_edit_iso else "low"
+        return {"created": creation_iso, "updated": last_edit_iso, "certainty": certainty}
     except Exception as e:
-        print(f"xeuledoc error for {url}: {e}", file=sys.stderr)
+        print(f"Error running xeuledoc for {url}: {e}", file=sys.stderr)
         return {"created": None, "updated": None, "certainty": "low"}
 
 def get_paste_metadata(url):
@@ -34,22 +55,19 @@ def get_paste_metadata(url):
         created = None
         updated = None
         if spans:
-            # Use the title attribute of the first span for the creation date.
             created_attr = spans[0].get("title")
             if created_attr:
                 try:
-                    created_dt = parse(created_attr)
-                    created = created_dt.isoformat()
+                    created = parse(created_attr).isoformat()
                 except Exception:
                     created = None
             updated = created
-            # Look for an additional span indicating a last edit.
+            # If a span with "Last edit on:" exists, update the updated date.
             for span in spans:
                 title = span.get("title", "")
                 if "last edit on:" in title.lower():
                     try:
-                        updated_dt = parse(title.replace("Last edit on:", "").strip())
-                        updated = updated_dt.isoformat()
+                        updated = parse(title.replace("Last edit on:", "").strip()).isoformat()
                     except Exception:
                         pass
             return {"created": created, "updated": updated, "certainty": "high"}
@@ -64,13 +82,12 @@ def get_changelog_metadata(url):
         resp.raise_for_status()
         html = resp.text
         if "changelog" in html.lower():
-            # Look for date strings like MM/DD/YYYY or similar.
+            # Find dates like MM/DD/YYYY or variants
             date_pattern = re.compile(r'(\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4})')
-            matches = date_pattern.findall(html)
             dates = []
-            for m in matches:
+            for match in date_pattern.findall(html):
                 try:
-                    d = parse(m, dayfirst=False)
+                    d = parse(match, dayfirst=False)
                     dates.append(d)
                 except Exception:
                     continue
@@ -81,44 +98,5 @@ def get_changelog_metadata(url):
                     "updated": dates[-1].isoformat(),
                     "certainty": "low"
                 }
-        return {"created": None, "updated": None, "certainty": "low"}
-    except Exception as e:
-        print(f"Error fetching changelog metadata for {url}: {e}", file=sys.stderr)
-        return {"created": None, "updated": None, "certainty": "low"}
-
-def get_metadata(url):
-    if re.search(r'docs\.google\.com|drive\.google\.com|sheets\.google\.com', url, re.I):
-        return get_google_metadata(url)
-    elif re.search(r'pastebin\.com|pastemd\.netlify\.app', url, re.I):
-        return get_paste_metadata(url)
-    else:
-        return get_changelog_metadata(url)
-
-def process_object(obj):
-    if isinstance(obj, list):
-        for item in obj:
-            process_object(item)
-    elif isinstance(obj, dict):
-        if "link" in obj:
-            metadata = get_metadata(obj["link"])
-            obj["created"] = metadata["created"]
-            obj["updated"] = metadata["updated"]
-            obj["certainty"] = metadata["certainty"]
-        for key in obj:
-            process_object(obj[key])
-
-def main():
-    try:
-        with open("routes.json", "r", encoding="utf8") as f:
-            routes_data = json.load(f)
-        process_object(routes_data)
-        with open("routes-with-timestamps.json", "w", encoding="utf8") as f:
-            json.dump(routes_data, f, indent=2)
-        print("Created routes-with-timestamps.json successfully.")
-    except Exception as e:
-        print("Error processing routes:", e, file=sys.stderr)
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main()
+        return {"created":
 
