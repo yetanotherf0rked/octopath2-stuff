@@ -1,114 +1,107 @@
 ---
-layout: none
-title: Home
+layout: default
+title: "Octopath Traveler II Routes & Resources"
 ---
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{{ page.title }} | {{ site.title }}</title>
+  <title>{{ page.title }}</title>
   <style>
-    /* Basic styling for tabs and table */
-    body { font-family: sans-serif; }
-    nav { margin-bottom: 20px; }
-    .tab {
-      display: inline-block;
-      padding: 10px 20px;
-      background: #ccc;
-      margin-right: 5px;
-      cursor: pointer;
-      border-radius: 3px;
-    }
-    .tab.active { background: #eee; font-weight: bold; }
-    .tab-content { display: none; padding-top: 20px; }
-    .tab-content.active { display: block; }
-    table { border-collapse: collapse; width: 100%; }
+    body { font-family: sans-serif; margin: 1em; }
+    /* Headings used as toggles */
+    .toggle { cursor: pointer; margin: 0.5em 0; }
+    .toggle-icon { margin-right: 0.5em; }
+    .hidden { display: none; }
+    /* Table styling */
+    table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
     th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+    th { background-color: #f2f2f2; cursor: pointer; }
+    /* Groups */
+    .group { border: 1px solid #ccc; padding: 0.5em; margin-bottom: 1em; }
+    .group-content { margin-left: 1em; }
   </style>
 </head>
 <body>
-  <!-- Navigation Tabs -->
-  <nav>
-    <div class="tab active" data-tab="routes-tab">Routes</div>
-    <div class="tab" data-tab="resources-tab">Resources</div>
-    <div class="tab" data-tab="about-tab">About</div>
-  </nav>
-
-  <!-- Routes Tab Content -->
-  <div id="routes-tab" class="tab-content active">
-    <h2>Routes</h2>
-    {% assign game_keys = site.data.routes-with-timestamps | keys %}
-    {% for game in game_keys %}
-      <h3>{{ game }}</h3>
-      {% assign game_data = site.data.routes-with-timestamps[game] %}
-      {% assign category_keys = game_data | keys %}
-      {% for category in category_keys %}
-        <h4>{{ category }}</h4>
-        {% assign routes = game_data[category] %}
-        <table>
-          <thead>
-            <tr>
-              <th>Fastest</th>
-              <th>Title</th>
-              <th>Author</th>
-              <th>Creation Date</th>
-              <th>Update Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for route in routes %}
-              <tr>
-                <td>{% if route.fastest %}⚡{% endif %}</td>
-                <td><a href="{{ route.link }}" target="_blank">{{ route.Title }}</a></td>
-                <td>{{ route.author }}</td>
-                <td>{{ route.created | default: "N/A" }}</td> <!-- added default fallback -->
-                <td>{{ route.updated | default: "N/A" }}</td> <!-- added default fallback -->
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% endfor %}
-    {% endfor %}
-  </div>
-
-  <!-- Resources Tab Content -->
-  <div id="resources-tab" class="tab-content">
-    <h2>Resources</h2>
-    {% assign resource_keys = site.data.resources | keys %}
-    {% for category in resource_keys %}
-      <h3>{{ category }}</h3>
-      {% assign items = site.data.resources[category] %}
-      <ul>
-        {% for item in items %}
-          <li><a href="{{ item.link }}" target="_blank">{{ item.Title }}</a></li>
-        {% endfor %}
-      </ul>
-    {% endfor %}
-  </div>
-
-  <!-- About Tab Content -->
-  <div id="about-tab" class="tab-content">
-    <h2>About</h2>
-    {% include_relative ABOUT.md %}
-  </div>
-
+  <h1>{{ page.title }}</h1>
+  <div id="routeContainer"></div>
+  
   <script>
-    // Tab switching functionality
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tabContents.forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        const targetEl = document.getElementById(tab.getAttribute('data-tab')); // added null check
-        if (targetEl) {
-          targetEl.classList.add('active');
-        }
-      });
+    // Inject the JSON data from _data/routes-with-timestamps.json
+    var data = {{ site.data.routes-with-timestamps | jsonify }};
+    
+    // Recursive function to render a group.
+    // groupName: the name/key of this group.
+    // group: the actual data (either an array of routes or an object with sub-groups).
+    // level: the heading level (defaults to 2).
+    function renderGroup(groupName, group, level) {
+      level = level || 2;
+      var html = '';
+      
+      // Render header with a toggle icon.
+      html += '<div class="group">';
+      html += '<h' + level + ' class="toggle" onclick="toggleSection(this)">';
+      html += '<span class="toggle-icon">&#9660;</span>' + groupName;
+      html += '</h' + level + '>';
+      
+      html += '<div class="group-content">';
+      
+      // If group is an array and its first element has a Title, treat it as route entries.
+      if (Array.isArray(group) && group.length && group[0].Title) {
+        // Sort routes so that fastest routes (true) come first.
+        var sortedGroup = group.slice().sort(function(a, b) {
+          return (b.fastest ? 1 : 0) - (a.fastest ? 1 : 0);
+        });
+        html += '<table class="routes-table">';
+        html += '<thead><tr>';
+        html += '<th>Title</th><th>Author</th><th>Link</th><th>Created</th><th>Updated</th>';
+        html += '</tr></thead>';
+        html += '<tbody>';
+        sortedGroup.forEach(function(route) {
+          html += '<tr>';
+          // Prepend a bolt emoji if fastest is true.
+          var title = (route.fastest ? '⚡ ' : '') + route.Title;
+          html += '<td>' + title + '</td>';
+          html += '<td>' + route.author + '</td>';
+          html += '<td><a href="' + route.link + '" target="_blank">Link</a></td>';
+          html += '<td>' + (route.created || 'N/A') + '</td>';
+          html += '<td>' + (route.updated || 'N/A') + '</td>';
+          html += '</tr>';
+        });
+        html += '</tbody></table>';
+      } else if (group && typeof group === 'object') {
+        // Otherwise, treat group as an object (a category): sort its keys and iterate recursively.
+        var keys = Object.keys(group).sort();
+        keys.forEach(function(key) {
+          html += renderGroup(key, group[key], level + 1);
+        });
+      }
+      
+      html += '</div></div>';
+      return html;
+    }
+    
+    // Render top-level groups (games)
+    var container = document.getElementById('routeContainer');
+    var topKeys = Object.keys(data).sort();
+    var html = '';
+    topKeys.forEach(function(key) {
+      html += renderGroup(key, data[key], 2);
     });
+    container.innerHTML = html;
+    
+    // Toggle function to show/hide the next sibling element.
+    function toggleSection(headerEl) {
+      var content = headerEl.nextElementSibling;
+      if (content.classList.contains("hidden")) {
+        content.classList.remove("hidden");
+        headerEl.querySelector(".toggle-icon").innerHTML = "&#9660;";
+      } else {
+        content.classList.add("hidden");
+        headerEl.querySelector(".toggle-icon").innerHTML = "&#9658;";
+      }
+    }
   </script>
 </body>
 </html>
-
