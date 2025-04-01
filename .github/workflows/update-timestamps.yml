@@ -1,0 +1,32 @@
+name: Update Routes with Timestamps
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 0 * * *'  # runs daily at midnight UTC
+
+jobs:
+  update-timestamps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install axios
+
+      - name: Run timestamp updater script
+        run: node update-timestamps.js
+
+      - name: Commit updated JSON file
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'routes-with-timestamps.json'
+          message: 'Update routes-with-timestamps.json with latest timestamps'
+
