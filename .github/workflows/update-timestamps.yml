@@ -21,7 +21,7 @@ jobs:
           node-version: '16'
 
       - name: Install dependencies
-        run: npm install axios
+        run: npm install axios pdf-parse
 
       - name: Run timestamp updater script
         run: node update-timestamps.js
