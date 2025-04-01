@@ -6,7 +6,7 @@ import subprocess
 import sys
 from dateutil.parser import parse
 
-INPUT_PATH = "_data\routes.json"
+INPUT_PATH = "_data/routes.json"
 OUTPUT_PATH = "_data/routes-with-timestamps.json"
 
 def get_google_metadata(url):
