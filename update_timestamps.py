@@ -6,6 +6,9 @@ import subprocess
 import sys
 from dateutil.parser import parse
 
+INPUT_PATH = "_data\routes.json"
+OUTPUT_PATH = "_data/routes-with-timestamps.json"
+
 def get_google_metadata(url):
     """
     Uses the external xeuledoc tool to fetch metadata for Google resources.
@@ -126,10 +129,10 @@ def process_object(obj):
 
 def main():
     try:
-        with open("routes.json", "r", encoding="utf8") as f:
+        with open(INPUT_PATH, "r", encoding="utf8") as f:
             routes_data = json.load(f)
         process_object(routes_data)
-        with open("routes-with-timestamps.json", "w", encoding="utf8") as f:
+        with open(OUTPUT_PATH, "w", encoding="utf8") as f:
             json.dump(routes_data, f, indent=2)
         print("Created routes-with-timestamps.json successfully.")
     except Exception as e:

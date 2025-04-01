@@ -30,6 +30,6 @@ jobs:
       - name: Commit updated JSON file
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'routes-with-timestamps.json'
-          message: 'Update routes-with-timestamps.json with latest timestamps'
+          add: '_data/routes-with-timestamps.json'
+          message: 'Update _data/routes-with-timestamps.json with latest timestamps'
 
