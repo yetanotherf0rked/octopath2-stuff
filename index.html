@@ -2,106 +2,82 @@
 layout: default
 title: "Octopath Traveler II Routes & Resources"
 ---
+<h1>{{ page.title }}</h1>
+<div id="routeContainer"></div>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ page.title }}</title>
-  <style>
-    body { font-family: sans-serif; margin: 1em; }
-    /* Headings used as toggles */
-    .toggle { cursor: pointer; margin: 0.5em 0; }
-    .toggle-icon { margin-right: 0.5em; }
-    .hidden { display: none; }
-    /* Table styling */
-    table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
-    th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
-    th { background-color: #f2f2f2; cursor: pointer; }
-    /* Groups */
-    .group { border: 1px solid #ccc; padding: 0.5em; margin-bottom: 1em; }
-    .group-content { margin-left: 1em; }
-  </style>
-</head>
-<body>
-  <h1>{{ page.title }}</h1>
-  <div id="routeContainer"></div>
-  
-  <script>
-    // Inject the JSON data from _data/routes-with-timestamps.json
-    var data = {{ site.data.routes-with-timestamps | jsonify }};
-    
-    // Recursive function to render a group.
-    // groupName: the name/key of this group.
-    // group: the actual data (either an array of routes or an object with sub-groups).
-    // level: the heading level (defaults to 2).
-    function renderGroup(groupName, group, level) {
-      level = level || 2;
-      var html = '';
-      
-      // Render header with a toggle icon.
-      html += '<div class="group">';
-      html += '<h' + level + ' class="toggle" onclick="toggleSection(this)">';
-      html += '<span class="toggle-icon">&#9660;</span>' + groupName;
-      html += '</h' + level + '>';
-      
-      html += '<div class="group-content">';
-      
-      // If group is an array and its first element has a Title, treat it as route entries.
-      if (Array.isArray(group) && group.length && group[0].Title) {
-        // Sort routes so that fastest routes (true) come first.
-        var sortedGroup = group.slice().sort(function(a, b) {
-          return (b.fastest ? 1 : 0) - (a.fastest ? 1 : 0);
-        });
-        html += '<table class="routes-table">';
-        html += '<thead><tr>';
-        html += '<th>Title</th><th>Author</th><th>Link</th><th>Created</th><th>Updated</th>';
-        html += '</tr></thead>';
-        html += '<tbody>';
-        sortedGroup.forEach(function(route) {
-          html += '<tr>';
-          // Prepend a bolt emoji if fastest is true.
-          var title = (route.fastest ? '⚡ ' : '') + route.Title;
-          html += '<td>' + title + '</td>';
-          html += '<td>' + route.author + '</td>';
-          html += '<td><a href="' + route.link + '" target="_blank">Link</a></td>';
-          html += '<td>' + (route.created || 'N/A') + '</td>';
-          html += '<td>' + (route.updated || 'N/A') + '</td>';
-          html += '</tr>';
-        });
-        html += '</tbody></table>';
-      } else if (group && typeof group === 'object') {
-        // Otherwise, treat group as an object (a category): sort its keys and iterate recursively.
-        var keys = Object.keys(group).sort();
-        keys.forEach(function(key) {
-          html += renderGroup(key, group[key], level + 1);
-        });
-      }
-      
-      html += '</div></div>';
-      return html;
-    }
-    
-    // Render top-level groups (games)
-    var container = document.getElementById('routeContainer');
-    var topKeys = Object.keys(data).sort();
+<script>
+  // Inject the JSON data from _data/routes-with-timestamps.json
+  var data = {{ site.data.routes-with-timestamps | jsonify }};
+
+  // Recursive function to render a group.
+  // groupName: the name/key of this group.
+  // group: the actual data (either an array of routes or an object with sub-groups).
+  // level: the heading level (defaults to 2).
+  function renderGroup(groupName, group, level) {
+    level = level || 2;
     var html = '';
-    topKeys.forEach(function(key) {
-      html += renderGroup(key, data[key], 2);
-    });
-    container.innerHTML = html;
     
-    // Toggle function to show/hide the next sibling element.
-    function toggleSection(headerEl) {
-      var content = headerEl.nextElementSibling;
-      if (content.classList.contains("hidden")) {
-        content.classList.remove("hidden");
-        headerEl.querySelector(".toggle-icon").innerHTML = "&#9660;";
-      } else {
-        content.classList.add("hidden");
-        headerEl.querySelector(".toggle-icon").innerHTML = "&#9658;";
-      }
+    // Render header with a toggle icon.
+    html += '<div class="group">';
+    html += '<h' + level + ' class="toggle" onclick="toggleSection(this)">';
+    html += '<span class="toggle-icon">&#9660;</span>' + groupName;
+    html += '</h' + level + '>';
+    
+    html += '<div class="group-content">';
+    
+    // If group is an array and its first element has a Title, treat it as route entries.
+    if (Array.isArray(group) && group.length && group[0].Title) {
+      // Sort routes so that fastest routes (true) come first.
+      var sortedGroup = group.slice().sort(function(a, b) {
+        return (b.fastest ? 1 : 0) - (a.fastest ? 1 : 0);
+      });
+      html += '<table class="routes-table">';
+      html += '<thead><tr>';
+      html += '<th>Title</th><th>Author</th><th>Link</th><th>Created</th><th>Updated</th>';
+      html += '</tr></thead>';
+      html += '<tbody>';
+      sortedGroup.forEach(function(route) {
+        html += '<tr>';
+        // Prepend a bolt emoji if fastest is true.
+        var title = (route.fastest ? '⚡ ' : '') + route.Title;
+        html += '<td>' + title + '</td>';
+        html += '<td>' + route.author + '</td>';
+        html += '<td><a href="' + route.link + '" target="_blank">Link</a></td>';
+        html += '<td>' + (route.created || 'N/A') + '</td>';
+        html += '<td>' + (route.updated || 'N/A') + '</td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+    } else if (group && typeof group === 'object') {
+      // Otherwise, treat group as an object (a category): sort its keys and iterate recursively.
+      var keys = Object.keys(group).sort();
+      keys.forEach(function(key) {
+        html += renderGroup(key, group[key], level + 1);
+      });
     }
-  </script>
-</body>
-</html>
+    
+    html += '</div></div>';
+    return html;
+  }
+  
+  // Render top-level groups (games)
+  var container = document.getElementById('routeContainer');
+  var topKeys = Object.keys(data).sort();
+  var html = '';
+  topKeys.forEach(function(key) {
+    html += renderGroup(key, data[key], 2);
+  });
+  container.innerHTML = html;
+  
+  // Toggle function to show/hide the next sibling element.
+  function toggleSection(headerEl) {
+    var content = headerEl.nextElementSibling;
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      headerEl.querySelector(".toggle-icon").innerHTML = "&#9660;";
+    } else {
+      content.classList.add("hidden");
+      headerEl.querySelector(".toggle-icon").innerHTML = "&#9658;";
+    }
+  }
+</script>

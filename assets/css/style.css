@@ -1,0 +1,89 @@
+/* Light Mode Colors - Refreshed Coffee/Cream Palette */
+:root {
+  --color-bg: #FFF8F0;           /* Very light cream background for a clean look */
+  --color-accent: #A67873;        /* Warm, muted coffee accent for links and highlights */
+  --color-text: #5D4037;          /* Rich, dark brown text for high readability */
+  --color-detail: #4E342E;        /* Deep coffee tone for borders and details */
+  --color-table-header: #E0D3C3;   /* Soft beige table header for a gentle contrast */
+  --color-border: #CCCCCC;        /* Light gray borders for a subtle separation */
+}
+
+/* Dark Mode Colors - Refreshed Coffee/Cream Palette */
+.dark-mode {
+  --color-bg: #2E1C1B;           /* Deep coffee background for a rich dark mode experience */
+  --color-accent: #D7CCC8;        /* Light coffee accent that pops against the dark background */
+  --color-text: #FBE9E7;          /* Warm, light cream text for improved readability */
+  --color-detail: #A1887F;        /* Muted, warm detail tone that is easy on the eyes */
+  --color-table-header: #180e0e;   /* Consistent dark header, or you can choose a slightly lighter tone if preferred */
+  --color-border: #555555;        /* Dark gray borders that maintain structure without overpowering */
+}
+
+/* Base styles */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: sans-serif;
+  margin: 1em;
+}
+
+/* Links */
+a {
+  color: var(--color-accent);
+}
+
+/* Header, footer, and section borders */
+header, footer, .section {
+  border-color: var(--color-detail);
+}
+
+/* Toggle elements (used for headings in your groups) */
+.toggle { 
+  cursor: pointer; 
+  margin: 0.5em 0; 
+}
+.toggle-icon { 
+  margin-right: 0.5em; 
+}
+.hidden { 
+  display: none; 
+}
+
+/* Table styling */
+table { 
+  border-collapse: collapse; 
+  width: 100%; 
+  margin-bottom: 1em; 
+}
+th, td { 
+  padding: 8px; 
+  border: 1px solid var(--color-border); 
+  text-align: left; 
+}
+th { 
+  background-color: var(--color-table-header); 
+  cursor: pointer; 
+}
+
+/* Groups styling */
+.group { 
+  padding: 0.5em; 
+  margin-bottom: 1em; 
+}
+.group-content { 
+  margin-left: 1em; 
+}
+
+/* Toggle Button Styling for Light/Dark Mode */
+.mode-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.mode-toggle:hover {
+  transform: scale(1.1);
+}

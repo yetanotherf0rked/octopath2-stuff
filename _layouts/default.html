@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/icons/alrond.png' | relative_url }}">
+  <style>
+    /* Optional: additional styles for the toggle button */
+    .mode-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .mode-toggle:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Page-specific content will be injected here -->
+  {{ content }}
+
+  <!-- Stylized Toggle Button with Icon -->
+  <button id="modeToggle" class="mode-toggle" aria-label="Toggle dark mode">
+    <span id="modeIcon">🌙</span>
+  </button>
+  
+  <!-- JavaScript for toggling dark mode and switching icons -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleBtn = document.getElementById('modeToggle');
+      const modeIcon = document.getElementById('modeIcon');
+      
+      toggleBtn.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        // Change the icon based on the current mode
+        if(document.body.classList.contains('dark-mode')) {
+          modeIcon.textContent = '☀️';
+        } else {
+          modeIcon.textContent = '🌙';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
