@@ -1,3 +1,84 @@
+/* Default Fonts */
+body {
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* You can also set a default font size and line-height if desired */
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Headings (optional, if you want a different font or weight for titles) */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Paragraphs */
+p {
+  margin-bottom: 1rem;
+}
+
+/* Fallback for code or monospace content */
+code, pre {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+/* Base styles */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: sans-serif;
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 2em;
+  text-align: center;  /* Center text by default */
+}
+
+/* Page Title */
+h1 {
+  text-align: center;
+  margin-bottom: 1.5em;
+}
+
+/* Google-Style Tab Navigation */
+.tabs {
+  display: flex;
+  justify-content: center;  /* Center the tab buttons horizontally */
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 1rem;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tab-button:hover {
+  background-color: var(--color-table-header);
+}
+
+.tab-button.active {
+  border-bottom: 3px solid var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Tab Content Panels */
+.tab-content {
+  display: none;  /* Hide all panels by default */
+  text-align: left;  /* Allow inner content to be left-aligned if desired */
+}
+
+.tab-content.active {
+  display: block;
+}
+
 /* Light Mode Colors - Refreshed Coffee/Cream Palette */
 :root {
   --color-bg: #FFF8F0;           /* Very light cream background for a clean look */
@@ -6,6 +87,11 @@
   --color-detail: #4E342E;        /* Deep coffee tone for borders and details */
   --color-table-header: #E0D3C3;   /* Soft beige table header for a gentle contrast */
   --color-border: #CCCCCC;        /* Light gray borders for a subtle separation */
+
+  /* Link state colors for Light Mode */
+  --color-link-default: var(--color-accent);
+  --color-link-visited: #856c67;  /* Slightly darker shade for visited links */
+  --color-link-hover: #804d44;    /* Slightly deeper accent on hover */
 }
 
 /* Dark Mode Colors - Refreshed Coffee/Cream Palette */
@@ -16,19 +102,24 @@
   --color-detail: #A1887F;        /* Muted, warm detail tone that is easy on the eyes */
   --color-table-header: #180e0e;   /* Consistent dark header, or you can choose a slightly lighter tone if preferred */
   --color-border: #555555;        /* Dark gray borders that maintain structure without overpowering */
+  
+  /* Link state colors for Dark Mode */
+  --color-link-default: var(--color-accent);
+  --color-link-visited: #c8b7af;  /* Slightly darker for visited links */
+  --color-link-hover: #baa89e;    /* A subtle change on hover */
 }
 
-/* Base styles */
-body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: sans-serif;
-  margin: 1em;
-}
 
-/* Links */
-a {
-  color: var(--color-accent);
+/* Link styling for all states */
+a:link {
+  color: var(--color-link-default);
+}
+a:visited {
+  color: var(--color-link-visited);
+}
+a:hover,
+a:active {
+  color: var(--color-link-hover);
 }
 
 /* Header, footer, and section borders */

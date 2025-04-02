@@ -1,83 +1,137 @@
 ---
 layout: default
-title: "Octopath Traveler II Routes & Resources"
+title: "Octopath Traveler II Speedrunning Routes & Resources"
 ---
+
 <h1>{{ page.title }}</h1>
-<div id="routeContainer"></div>
+
+<!-- Tab Navigation -->
+<div class="tabs">
+  <button class="tab-button active" data-tab="routes">Routes</button>
+  <button class="tab-button" data-tab="resources">Resources</button>
+  <button class="tab-button" data-tab="about">About</button>
+</div>
+
+<!-- Tab Contents -->
+<div class="tab-content active" id="tab-routes">
+  <div id="routeContainer"></div>
+</div>
+
+<div class="tab-content" id="tab-resources">
+  <div id="resourceContainer"></div>
+</div>
+
+{% capture about_content %}
+  {% include_relative ABOUT.md %}
+{% endcapture %}
+<div class="tab-content" id="tab-about">
+  {{ about_content | markdownify }}
+</div>
 
 <script>
-  // Inject the JSON data from _data/routes-with-timestamps.json
-  var data = {{ site.data.routes-with-timestamps | jsonify }};
-
-  // Recursive function to render a group.
-  // groupName: the name/key of this group.
-  // group: the actual data (either an array of routes or an object with sub-groups).
-  // level: the heading level (defaults to 2).
-  function renderGroup(groupName, group, level) {
-    level = level || 2;
-    var html = '';
+// Tab switching functionality
+document.querySelectorAll('.tab-button').forEach(function(button) {
+  button.addEventListener('click', function() {
+    var tab = this.getAttribute('data-tab');
     
-    // Render header with a toggle icon.
-    html += '<div class="group">';
-    html += '<h' + level + ' class="toggle" onclick="toggleSection(this)">';
-    html += '<span class="toggle-icon">&#9660;</span>' + groupName;
-    html += '</h' + level + '>';
+    // Toggle content panels by updating the active class
+    document.querySelectorAll('.tab-content').forEach(function(content) {
+      if(content.id === 'tab-' + tab) {
+        content.classList.add('active');
+      } else {
+        content.classList.remove('active');
+      }
+    });
     
-    html += '<div class="group-content">';
-    
-    // If group is an array and its first element has a Title, treat it as route entries.
-    if (Array.isArray(group) && group.length && group[0].Title) {
-      // Sort routes so that fastest routes (true) come first.
-      var sortedGroup = group.slice().sort(function(a, b) {
-        return (b.fastest ? 1 : 0) - (a.fastest ? 1 : 0);
-      });
-      html += '<table class="routes-table">';
-      html += '<thead><tr>';
-      html += '<th>Title</th><th>Author</th><th>Link</th><th>Created</th><th>Updated</th>';
-      html += '</tr></thead>';
-      html += '<tbody>';
-      sortedGroup.forEach(function(route) {
-        html += '<tr>';
-        // Prepend a bolt emoji if fastest is true.
-        var title = (route.fastest ? '⚡ ' : '') + route.Title;
-        html += '<td>' + title + '</td>';
-        html += '<td>' + route.author + '</td>';
-        html += '<td><a href="' + route.link + '" target="_blank">Link</a></td>';
-        html += '<td>' + (route.created || 'N/A') + '</td>';
-        html += '<td>' + (route.updated || 'N/A') + '</td>';
-        html += '</tr>';
-      });
-      html += '</tbody></table>';
-    } else if (group && typeof group === 'object') {
-      // Otherwise, treat group as an object (a category): sort its keys and iterate recursively.
-      var keys = Object.keys(group).sort();
-      keys.forEach(function(key) {
-        html += renderGroup(key, group[key], level + 1);
-      });
-    }
-    
-    html += '</div></div>';
-    return html;
-  }
-  
-  // Render top-level groups (games)
-  var container = document.getElementById('routeContainer');
-  var topKeys = Object.keys(data).sort();
-  var html = '';
-  topKeys.forEach(function(key) {
-    html += renderGroup(key, data[key], 2);
+    // Update active button styling
+    document.querySelectorAll('.tab-button').forEach(function(btn) {
+      btn.classList.remove('active');
+    });
+    this.classList.add('active');
   });
-  container.innerHTML = html;
+});
+
+// ----------------------
+// Routes Tab
+// ----------------------
+// Data from _data/routes-with-timestamps.json
+var routesData = {{ site.data.routes-with-timestamps | jsonify }};
+
+// Recursive function to render a group of routes.
+function renderGroup(groupName, group, level) {
+  level = level || 2;
+  var html = '';
+  html += '<div class="group">';
+  html += '<h' + level + ' class="toggle" onclick="toggleSection(this)">';
+  html += '<span class="toggle-icon">&#9660;</span>' + groupName;
+  html += '</h' + level + '>';
   
-  // Toggle function to show/hide the next sibling element.
-  function toggleSection(headerEl) {
-    var content = headerEl.nextElementSibling;
-    if (content.classList.contains("hidden")) {
-      content.classList.remove("hidden");
-      headerEl.querySelector(".toggle-icon").innerHTML = "&#9660;";
-    } else {
-      content.classList.add("hidden");
-      headerEl.querySelector(".toggle-icon").innerHTML = "&#9658;";
-    }
+  html += '<div class="group-content">';
+  
+  if (Array.isArray(group) && group.length && group[0].Title) {
+    var sortedGroup = group.slice().sort(function(a, b) {
+      return (b.fastest ? 1 : 0) - (a.fastest ? 1 : 0);
+    });
+    html += '<table class="routes-table">';
+    html += '<thead><tr>';
+    html += '<th>Title</th><th>Author</th><th>Link</th><th>Created</th><th>Updated</th>';
+    html += '</tr></thead>';
+    html += '<tbody>';
+    sortedGroup.forEach(function(route) {
+      html += '<tr>';
+      var title = (route.fastest ? '⚡ ' : '') + route.Title;
+      html += '<td>' + title + '</td>';
+      html += '<td>' + route.author + '</td>';
+      html += '<td><a href="' + route.link + '" target="_blank">Link</a></td>';
+      html += '<td>' + (route.created || 'N/A') + '</td>';
+      html += '<td>' + (route.updated || 'N/A') + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+  } else if (group && typeof group === 'object') {
+    var keys = Object.keys(group).sort();
+    keys.forEach(function(key) {
+      html += renderGroup(key, group[key], level + 1);
+    });
   }
+  
+  html += '</div></div>';
+  return html;
+}
+
+var routeContainer = document.getElementById('routeContainer');
+var topKeys = Object.keys(routesData).sort();
+var routesHtml = '';
+topKeys.forEach(function(key) {
+  routesHtml += renderGroup(key, routesData[key], 2);
+});
+routeContainer.innerHTML = routesHtml;
+
+function toggleSection(headerEl) {
+  var content = headerEl.nextElementSibling;
+  if (content.classList.contains("hidden")) {
+    content.classList.remove("hidden");
+    headerEl.querySelector(".toggle-icon").innerHTML = "&#9660;";
+  } else {
+    content.classList.add("hidden");
+    headerEl.querySelector(".toggle-icon").innerHTML = "&#9658;";
+  }
+}
+
+// ----------------------
+// Resources Tab
+// ----------------------
+var resourcesData = {{ site.data.resources | jsonify }};
+var resourceContainer = document.getElementById('resourceContainer');
+var resourcesHtml = '';
+
+Object.keys(resourcesData).sort().forEach(function(category) {
+  resourcesHtml += '<h2>' + category + '</h2>';
+  resourcesHtml += '<ul>';
+  resourcesData[category].forEach(function(item) {
+    resourcesHtml += '<li><a href="' + item.link + '" target="_blank">' + item.Title + '</a></li>';
+  });
+  resourcesHtml += '</ul>';
+});
+resourceContainer.innerHTML = resourcesHtml;
 </script>
