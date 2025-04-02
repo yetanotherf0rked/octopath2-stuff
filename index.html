@@ -73,8 +73,15 @@ function renderGroup(groupName, group, level) {
       return (b.fastest ? 1 : 0) - (a.fastest ? 1 : 0);
     });
     html += '<table class="routes-table">';
+    html += '<colgroup>';
+    html += '<col style="width: 10%;">'; // Flags column
+    html += '<col style="width: 30%;">'; // Title column
+    html += '<col style="width: 20%;">'; // Author column
+    html += '<col style="width: 20%;">'; // Created column
+    html += '<col style="width: 20%;">'; // Updated column
+    html += '</colgroup>';
     html += '<thead><tr>';
-    html += '<th>Flags</th><th>Title</th><th>Author</th><th>Created</th><th>Updated</th>';
+    html += '<th>Flags</th><th>Route</th><th>Author</th><th>Created</th><th>Updated</th>';
     html += '</tr></thead>';
     html += '<tbody>';
     sortedGroup.forEach(function(route) {

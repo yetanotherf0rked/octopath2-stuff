@@ -182,3 +182,16 @@ th {
 .mode-toggle:hover {
   transform: scale(1.1);
 }
+
+.routes-table {
+  table-layout: fixed;
+  width: 100%;
+  margin: 0 auto;  /* centers the table horizontally */
+}
+
+.routes-table th,
+.routes-table td {
+  overflow: hidden;      /* prevents content from overflowing */
+  text-overflow: ellipsis;
+  white-space: nowrap;   /* keeps text on one line */
+}
