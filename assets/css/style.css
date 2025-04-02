@@ -159,15 +159,6 @@ th {
   cursor: pointer; 
 }
 
-/* Groups styling */
-.group { 
-  padding: 0.5em; 
-  margin-bottom: 0.5em;      /* reduced from 1em */
-}
-.group-content { 
-  margin-left: 1em; 
-}
-
 /* Toggle Button Styling for Light/Dark Mode */
 .mode-toggle {
   position: fixed;
