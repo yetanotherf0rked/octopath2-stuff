@@ -96,7 +96,7 @@ function renderGroup(groupName, group, level) {
         if (route.heavy_rng)       flagsHtml += '<span title="Heavy RNG">🎲</span> ';
         if (route.cait_dependent)  flagsHtml += '<span title="Cait Dependent">🐱</span> ';
         if (route.octopuff_dependent) flagsHtml += '<span title="Octopuff Dependent">🐙</span> ';
-        html += '<td>' + flagsHtml + '</td>';
+        html += '<td style="text-align: center;">' + flagsHtml + '</td>';
         
         // Title cell: route title wrapped in an anchor tag.
         html += '<td><a href="' + route.link + '" target="_blank">' + route.Title + '</a></td>';
