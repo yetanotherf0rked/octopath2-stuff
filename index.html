@@ -67,47 +67,50 @@ function renderGroup(groupName, group, level) {
   html += '</h' + level + '>';
   
   html += '<div class="group-content">';
-  
-  if (Array.isArray(group) && group.length && group[0].Title) {
-    var sortedGroup = group.slice().sort(function(a, b) {
-      return (b.fastest ? 1 : 0) - (a.fastest ? 1 : 0);
-    });
-    html += '<table class="routes-table">';
-    html += '<colgroup>';
-    html += '<col style="width: 10%;">'; // Flags column
-    html += '<col style="width: 30%;">'; // Title column
-    html += '<col style="width: 20%;">'; // Author column
-    html += '<col style="width: 20%;">'; // Created column
-    html += '<col style="width: 20%;">'; // Updated column
-    html += '</colgroup>';
-    html += '<thead><tr>';
-    html += '<th>Flags</th><th>Route</th><th>Author</th><th>Created</th><th>Updated</th>';
-    html += '</tr></thead>';
-    html += '<tbody>';
-    sortedGroup.forEach(function(route) {
-      html += '<tr>';
-      
-      // Build flags column with emojis and tooltips.
-      var flagsHtml = "";
-      if (route.beginner_friendly) flagsHtml += '<span title="Beginner Friendly">🌱</span> ';
-      if (route.fastest)         flagsHtml += '<span title="Fastest">⚡</span> ';
-      if (route.heavy_rng)       flagsHtml += '<span title="Heavy RNG">🎲</span> ';
-      if (route.cait_dependent)  flagsHtml += '<span title="Cait Dependent">🐱</span> ';
-      if (route.octopuff_dependent) flagsHtml += '<span title="Octopuff Dependent">🐙</span> ';
-      html += '<td>' + flagsHtml + '</td>';
-      
-      // Title cell: route title wrapped in an anchor tag.
-      html += '<td><a href="' + route.link + '" target="_blank">' + route.Title + '</a></td>';
-      
-      // Author
-      html += '<td>' + route.author + '</td>';
-      
-      // Created and Updated dates
-      html += '<td>' + (route.created || 'N/A') + '</td>';
-      html += '<td>' + (route.updated || 'N/A') + '</td>';
-      html += '</tr>';
-    });
-    html += '</tbody></table>';
+  if (Array.isArray(group)) {
+    if (group.length === 0) {
+      html += '<em>No route for this category yet! Maybe you\'ll be the first one to route it?</em>';
+    } else if (group[0].Title) {
+      var sortedGroup = group.slice().sort(function(a, b) {
+        return (b.fastest ? 1 : 0) - (a.fastest ? 1 : 0);
+      });
+      html += '<table class="routes-table">';
+      html += '<colgroup>';
+      html += '<col style="width: 10%;">'; // Flags column
+      html += '<col style="width: 30%;">'; // Title column
+      html += '<col style="width: 20%;">'; // Author column
+      html += '<col style="width: 20%;">'; // Created column
+      html += '<col style="width: 20%;">'; // Updated column
+      html += '</colgroup>';
+      html += '<thead><tr>';
+      html += '<th>Flags</th><th>Route</th><th>Author</th><th>Created</th><th>Updated</th>';
+      html += '</tr></thead>';
+      html += '<tbody>';
+      sortedGroup.forEach(function(route) {
+        html += '<tr>';
+        
+        // Build flags column with emojis and tooltips.
+        var flagsHtml = "";
+        if (route.beginner_friendly) flagsHtml += '<span title="Beginner Friendly">🌱</span> ';
+        if (route.fastest)         flagsHtml += '<span title="Fastest">⚡</span> ';
+        if (route.heavy_rng)       flagsHtml += '<span title="Heavy RNG">🎲</span> ';
+        if (route.cait_dependent)  flagsHtml += '<span title="Cait Dependent">🐱</span> ';
+        if (route.octopuff_dependent) flagsHtml += '<span title="Octopuff Dependent">🐙</span> ';
+        html += '<td>' + flagsHtml + '</td>';
+        
+        // Title cell: route title wrapped in an anchor tag.
+        html += '<td><a href="' + route.link + '" target="_blank">' + route.Title + '</a></td>';
+        
+        // Author
+        html += '<td>' + route.author + '</td>';
+        
+        // Created and Updated dates
+        html += '<td>' + (route.created || 'N/A') + '</td>';
+        html += '<td>' + (route.updated || 'N/A') + '</td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+    }
   } else if (group && typeof group === 'object') {
     var keys = Object.keys(group).sort();
     keys.forEach(function(key) {
@@ -125,7 +128,7 @@ var routesHtml = '';
 topKeys.forEach(function(key) {
   routesHtml += renderGroup(key, routesData[key], 2);
 });
-routeContainer.innerHTML = routesHtml;
+  routeContainer.innerHTML = routesHtml;
 
 function toggleSection(headerEl) {
   var content = headerEl.nextElementSibling;
