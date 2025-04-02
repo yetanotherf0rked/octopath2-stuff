@@ -74,15 +74,28 @@ function renderGroup(groupName, group, level) {
     });
     html += '<table class="routes-table">';
     html += '<thead><tr>';
-    html += '<th>Title</th><th>Author</th><th>Link</th><th>Created</th><th>Updated</th>';
+    html += '<th>Flags</th><th>Title</th><th>Author</th><th>Created</th><th>Updated</th>';
     html += '</tr></thead>';
     html += '<tbody>';
     sortedGroup.forEach(function(route) {
       html += '<tr>';
-      var title = (route.fastest ? '⚡ ' : '') + route.Title;
-      html += '<td>' + title + '</td>';
+      
+      // Build flags column with emojis and tooltips.
+      var flagsHtml = "";
+      if (route.beginner_friendly) flagsHtml += '<span title="Beginner Friendly">🌱</span> ';
+      if (route.fastest)         flagsHtml += '<span title="Fastest">⚡</span> ';
+      if (route.heavy_rng)       flagsHtml += '<span title="Heavy RNG">🎲</span> ';
+      if (route.cait_dependent)  flagsHtml += '<span title="Cait Dependent">🐱</span> ';
+      if (route.octopuff_dependent) flagsHtml += '<span title="Octopuff Dependent">🐙</span> ';
+      html += '<td>' + flagsHtml + '</td>';
+      
+      // Title cell: route title wrapped in an anchor tag.
+      html += '<td><a href="' + route.link + '" target="_blank">' + route.Title + '</a></td>';
+      
+      // Author
       html += '<td>' + route.author + '</td>';
-      html += '<td><a href="' + route.link + '" target="_blank">Link</a></td>';
+      
+      // Created and Updated dates
       html += '<td>' + (route.created || 'N/A') + '</td>';
       html += '<td>' + (route.updated || 'N/A') + '</td>';
       html += '</tr>';
