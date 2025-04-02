@@ -10,13 +10,13 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 700;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;        /* reduced from 1rem */
+  margin-bottom: 0.25rem;    /* reduced from 0.5rem */
 }
 
 /* Paragraphs */
 p {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;     /* reduced from 1rem */
 }
 
 /* Fallback for code or monospace content */
@@ -31,21 +31,20 @@ body {
   font-family: sans-serif;
   margin: 0 auto;
   max-width: 900px;
-  padding: 2em;
+  padding: 1em;             /* reduced from 2em */
   text-align: center;  /* Center text by default */
 }
 
 /* Page Title */
 h1 {
   text-align: center;
-  margin-bottom: 1.5em;
+  margin-bottom: 0.5em;
 }
 
 /* Google-Style Tab Navigation */
 .tabs {
   display: flex;
   justify-content: center;  /* Center the tab buttons horizontally */
-  border-bottom: 2px solid var(--color-border);
   margin-bottom: 1rem;
 }
 
@@ -55,9 +54,11 @@ h1 {
   outline: none;
   cursor: pointer;
   padding: 1rem 1.5rem;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   color: var(--color-text);
   transition: background-color 0.3s ease, color 0.3s ease;
+  border-bottom: 3px solid var(--color-border);
 }
 
 .tab-button:hover {
@@ -66,6 +67,7 @@ h1 {
 
 .tab-button.active {
   border-bottom: 3px solid var(--color-accent);
+  font-weight: bold;
   color: var(--color-accent);
 }
 
@@ -87,6 +89,7 @@ h1 {
   --color-detail: #4E342E;        /* Deep coffee tone for borders and details */
   --color-table-header: #E0D3C3;   /* Soft beige table header for a gentle contrast */
   --color-border: #CCCCCC;        /* Light gray borders for a subtle separation */
+  --color-inactive: #555555;  
 
   /* Link state colors for Light Mode */
   --color-link-default: var(--color-accent);
@@ -102,7 +105,8 @@ h1 {
   --color-detail: #A1887F;        /* Muted, warm detail tone that is easy on the eyes */
   --color-table-header: #180e0e;   /* Consistent dark header, or you can choose a slightly lighter tone if preferred */
   --color-border: #555555;        /* Dark gray borders that maintain structure without overpowering */
-  
+  --color-inactive: #CCCCCC;  
+
   /* Link state colors for Dark Mode */
   --color-link-default: var(--color-accent);
   --color-link-visited: #c8b7af;  /* Slightly darker for visited links */
@@ -143,7 +147,7 @@ header, footer, .section {
 table { 
   border-collapse: collapse; 
   width: 100%; 
-  margin-bottom: 1em; 
+  margin-bottom: 0.5em;      /* reduced from 1em */
 }
 th, td { 
   padding: 8px; 
@@ -158,7 +162,7 @@ th {
 /* Groups styling */
 .group { 
   padding: 0.5em; 
-  margin-bottom: 1em; 
+  margin-bottom: 0.5em;      /* reduced from 1em */
 }
 .group-content { 
   margin-left: 1em; 
